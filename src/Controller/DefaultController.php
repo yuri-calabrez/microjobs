@@ -16,4 +16,13 @@ class DefaultController extends Controller
     {
         return [];
     }
+
+    /**
+     * @Route("/painel", name="painel")
+     */
+    public function painel()
+    {
+        return "painel";
+    }
+
 }

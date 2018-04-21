@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Login - {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h3>Faça seu login</h3>
+        <hr>
+        <form class="form-signin" method="post" action="">
+            <label for="email" class="sr-only">E-mail</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" autofocus>
+
+            <label for="senha" class="sr-only">Password</label>
+            <input type="password" id="senha" name="senha" class="form-control" placeholder="Password">
+            {#<div class="checkbox mb-3">#}
+                {#<label>#}
+                    {#<input type="checkbox" value="remember-me"> Remember me#}
+                {#</label>#}
+            {#</div>#}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+        </form>
+    </div>
+{% endblock %}
