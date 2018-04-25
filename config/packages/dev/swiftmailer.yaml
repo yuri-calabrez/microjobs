@@ -2,3 +2,8 @@
 swiftmailer:
     # send all emails to a specific address
     #delivery_addresses: ['me@example.com']
+    transport: smtp
+    username: bd49cbf751d6bd
+    password: 2fc175ffd96e6f
+    host: smtp.mailtrap.io
+    port: 2525

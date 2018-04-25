@@ -2,7 +2,7 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         main:
-            entity: { class: App\Entity\Usuario, property: email }
+            entity: { class: App\Entity\Usuario }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -13,7 +13,7 @@ security:
             form_login:
                 login_path: login
                 check_path: login
-                default_target_path: default
+                default_target_path: painel
                 always_use_default_target_path: true
 
                 username_parameter: email

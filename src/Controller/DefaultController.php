@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,10 +20,11 @@ class DefaultController extends Controller
 
     /**
      * @Route("/painel", name="painel")
+     * @Template("default/painel.html.twig")
      */
     public function painel()
     {
-        return "painel";
+        return [];
     }
 
 }
