@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -67,9 +69,15 @@ class Usuario implements UserInterface
      */
     private $roles;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Servico", mappedBy="usuario")
+     */
+    private $yes;
+
     public function __construct()
     {
         $this->status = false;
+        $this->yes = new ArrayCollection();
     }
 
     public function getId()
@@ -234,6 +242,37 @@ class Usuario implements UserInterface
     public function setRoles($roles): self
     {
         $this->roles[] = $roles;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Servico[]
+     */
+    public function getYes(): Collection
+    {
+        return $this->yes;
+    }
+
+    public function addYe(Servico $ye): self
+    {
+        if (!$this->yes->contains($ye)) {
+            $this->yes[] = $ye;
+            $ye->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeYe(Servico $ye): self
+    {
+        if ($this->yes->contains($ye)) {
+            $this->yes->removeElement($ye);
+            // set the owning side to null (unless already changed)
+            if ($ye->getUsuario() === $this) {
+                $ye->setUsuario(null);
+            }
+        }
+
         return $this;
     }
 }
