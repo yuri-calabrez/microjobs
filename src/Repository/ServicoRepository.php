@@ -19,6 +19,22 @@ class ServicoRepository extends ServiceEntityRepository
         parent::__construct($registry, Servico::class);
     }
 
+    public function findByUsuarioAndStatus($user, $status = null)
+    {
+        $q = $this->createQueryBuilder("s")
+                ->andWhere("s.usuario = :usuario")
+                ->setParameter("usuario", $user);
+
+        if (!empty($status)) {
+            $q->andWhere("s.status = :status")
+                ->setParameter("status", $status);
+        }
+
+        $q->orderBy("s.data_cadastro", 'desc');
+        $query = $q->getQuery();
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return Servico[] Returns an array of Servico objects
 //     */

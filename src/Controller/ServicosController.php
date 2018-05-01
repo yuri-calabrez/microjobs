@@ -41,7 +41,11 @@ class ServicosController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $servico->setImagem(uniqid()."jpg");
+            $imagem = $servico->getImagem();
+            $nomeArquivo = md5(uniqid()).".".$imagem->guessExtension();
+            $imagem->move($this->getParameter('caminho_img_job'), $nomeArquivo);
+            $servico->setImagem($nomeArquivo);
+
             $servico->setValor(30.00);
             $servico->setUsuario($user);
             $servico->setStatus("A");
@@ -54,5 +58,18 @@ class ServicosController extends Controller
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @Route("/painel/servicos/excluir/{id}", name="excluir_job")
+     */
+    public function excluir(Servico $servico)
+    {
+        $servico->setStatus("E");
+        $this->em->persist($servico);
+        $this->em->flush();
+
+        $this->addFlash('success', 'Serviço excluido com sucesso!');
+        return $this->redirectToRoute('painel');
     }
 }

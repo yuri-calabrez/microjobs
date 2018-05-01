@@ -219,12 +219,12 @@ class Servico
         return $this;
     }
 
-    public function getImagem(): ?string
+    public function getImagem()
     {
         return $this->imagem;
     }
 
-    public function setImagem(?string $imagem): self
+    public function setImagem($imagem): self
     {
         $this->imagem = $imagem;
 

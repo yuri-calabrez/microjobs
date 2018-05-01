@@ -6,6 +6,7 @@ use App\Entity\Categoria;
 use App\Entity\Servico;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,10 +22,10 @@ class ServicoType extends AbstractType
             ->add('informacoes_adicionais')
             ->add('prazo_entrega')
             ->add('status')
-            ->add('imagem')
+            ->add('imagem', FileType::class)
             ->add('categorias', EntityType::class, [
                 'class' => Categoria::class,
-                'choice_name' => 'nome',
+                'choice_label' => 'nome',
                 'multiple' => true,
                 'expanded' => true
             ])
