@@ -35,6 +35,23 @@ class ServicoRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findByListagem($busca = null, $limite = 16, $ordem = "desc")
+    {
+        $q = $this->createQueryBuilder("s")
+                ->where("s.status = 'P'");
+
+        if (!empty($busca)) {
+            $q->andWhere("s.titulo like :busca")
+                ->setParameter("busca", "%".$busca."%");
+        }
+
+        $q->setMaxResults($limite)
+            ->orderBy("s.data_cadastro", $ordem);
+
+        $query = $q->getQuery();
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return Servico[] Returns an array of Servico objects
 //     */

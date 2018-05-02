@@ -23,9 +23,13 @@ class DefaultController extends Controller
      * @Route("/", name="default")
      * @Template("default/index.html.twig")
      */
-    public function index()
+    public function index(Request $request)
     {
-        return [];
+        $busca = $request->get('busca');
+        $microjobs = $this->em->getRepository(Servico::class)->findByListagem($busca);
+        return [
+            'microjobs' => $microjobs
+        ];
     }
 
     /**
@@ -41,6 +45,18 @@ class DefaultController extends Controller
         return [
             'microjobs' => $microjobs,
             'status' => $status
+        ];
+    }
+
+    /**
+     * @Route("/microjob/{slug}", name="visualizar_job")
+     * @Template("default/visualizar_job.html.twig")
+     * @param Servico $servico
+     */
+    public function visualizarJob(Servico $servico)
+    {
+        return [
+            'job' => $servico
         ];
     }
 
