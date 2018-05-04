@@ -91,7 +91,7 @@ class ServicosController extends Controller
 
         $this->em->persist($contratacao);
         $this->em->flush();
-
+        //$this->getEmail()->enviar();
         $this->addFlash('success', 'Serviço foi contratado!');
         return $this->redirectToRoute('default');
     }
