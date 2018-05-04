@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Contratacoes;
 use App\Entity\Servico;
 use App\Form\ServicoType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,5 +72,27 @@ class ServicosController extends Controller
 
         $this->addFlash('success', 'Serviço excluido com sucesso!');
         return $this->redirectToRoute('painel');
+    }
+
+    /**
+     * @Route("/contratar-servico/{id}/{slug}", name="contratar_servico")
+     */
+    public function contratarServico(Servico $servico, UserInterface $user)
+    {
+        //TODO: VERIFICAR ACESSO SOMENTE SE LOGADO
+
+        $contratacao = new Contratacoes();
+        $contratacao
+            ->setValor($servico->getValor())
+            ->setServico($servico)
+            ->setCliente($user)
+            ->setFreelancer($servico->getUsuario())
+            ->setStatus("A");
+
+        $this->em->persist($contratacao);
+        $this->em->flush();
+
+        $this->addFlash('success', 'Serviço foi contratado!');
+        return $this->redirectToRoute('default');
     }
 }

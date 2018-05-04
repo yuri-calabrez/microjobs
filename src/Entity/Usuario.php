@@ -72,12 +72,24 @@ class Usuario implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Servico", mappedBy="usuario")
      */
-    private $yes;
+    private $servico;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contratacoes", mappedBy="cliente")
+     */
+    private $compras;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contratacoes", mappedBy="freelancer")
+     */
+    private $vendas;
 
     public function __construct()
     {
         $this->status = false;
-        $this->yes = new ArrayCollection();
+        $this->servico = new ArrayCollection();
+        $this->compras = new ArrayCollection();
+        $this->vendas = new ArrayCollection();
     }
 
     public function getId()
@@ -245,31 +257,99 @@ class Usuario implements UserInterface
         return $this;
     }
 
+    public function limparRoles(): self
+    {
+        $this->roles = [];
+        return $this;
+    }
+
     /**
      * @return Collection|Servico[]
      */
-    public function getYes(): Collection
+    public function getServico(): Collection
     {
-        return $this->yes;
+        return $this->servico;
     }
 
-    public function addYe(Servico $ye): self
+    public function addYe(Servico $servico): self
     {
-        if (!$this->yes->contains($ye)) {
-            $this->yes[] = $ye;
-            $ye->setUsuario($this);
+        if (!$this->servico->contains($servico)) {
+            $this->servico[] = $servico;
+            $servico->setUsuario($this);
         }
 
         return $this;
     }
 
-    public function removeYe(Servico $ye): self
+    public function removeYe(Servico $servico): self
     {
-        if ($this->yes->contains($ye)) {
-            $this->yes->removeElement($ye);
+        if ($this->servico->contains($servico)) {
+            $this->servico->removeElement($servico);
             // set the owning side to null (unless already changed)
-            if ($ye->getUsuario() === $this) {
-                $ye->setUsuario(null);
+            if ($servico->getUsuario() === $this) {
+                $servico->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contratacoes[]
+     */
+    public function getCompras(): Collection
+    {
+        return $this->compras;
+    }
+
+    public function addCompra(Contratacoes $compra): self
+    {
+        if (!$this->compras->contains($compra)) {
+            $this->compras[] = $compra;
+            $compra->setCliente($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompra(Contratacoes $compra): self
+    {
+        if ($this->compras->contains($compra)) {
+            $this->compras->removeElement($compra);
+            // set the owning side to null (unless already changed)
+            if ($compra->getCliente() === $this) {
+                $compra->setCliente(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contratacoes[]
+     */
+    public function getVendas(): Collection
+    {
+        return $this->vendas;
+    }
+
+    public function addVenda(Contratacoes $venda): self
+    {
+        if (!$this->vendas->contains($venda)) {
+            $this->vendas[] = $venda;
+            $venda->setFreelancer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVenda(Contratacoes $venda): self
+    {
+        if ($this->vendas->contains($venda)) {
+            $this->vendas->removeElement($venda);
+            // set the owning side to null (unless already changed)
+            if ($venda->getFreelancer() === $this) {
+                $venda->setFreelancer(null);
             }
         }
 
