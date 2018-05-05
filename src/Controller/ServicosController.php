@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contratacoes;
 use App\Entity\Servico;
+use App\Entity\Usuario;
 use App\Form\ServicoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,8 +92,45 @@ class ServicosController extends Controller
 
         $this->em->persist($contratacao);
         $this->em->flush();
-        //$this->getEmail()->enviar();
+        $this->get('email')->enviar(
+            $user->getNome()." - Contratação de serviço",
+            [$user->getEmail() => $user->getNome()],
+            'emails/servicos/contratacao-cliente.html.twig',
+            ['servico' => $servico, 'cliente' => $user]
+        );
+
+        $this->get('email')->enviar(
+            $servico->getUsuario()->getNome().", Parabens",
+            [$servico->getUsuario()->getEmail() => $servico->getUsuario()->getNome()],
+            'emails/servicos/contratacao-freela.html.twig',
+            ['servico' => $servico, 'cliente' => $user]
+        );
+
         $this->addFlash('success', 'Serviço foi contratado!');
         return $this->redirectToRoute('default');
+    }
+
+    /**
+     * @Route("/painel/servicos/listar-compras", name="listar_compras")
+     * @Template("servicos/listar-compras.html.twig")
+     */
+    public function listarCompras(UserInterface $user)
+    {
+        $usuario = $this->em->getRepository(Usuario::class)->find($user);
+        return [
+            'compras' => $usuario->getCompras()
+        ];
+    }
+
+    /**
+     * @Route("/painel/servicos/listar-vendas", name="listar_vendas")
+     * @Template("servicos/listar-vendas.html.twig")
+     */
+    public function listarVendas(UserInterface $user)
+    {
+        $usuario = $this->em->getRepository(Usuario::class)->find($user);
+        return [
+            'vendas' => $usuario->getVendas()
+        ];
     }
 }

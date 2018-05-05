@@ -65,14 +65,14 @@ class UsuariosController extends Controller
             $this->em->persist($usuario);
             $this->em->flush();
 
-            $mensagem = (new \Swift_Message($usuario->getNome() . ", ative sua conta no Microjobs"))
-                ->setFrom('noreplay@microjobs.com.br')
-                ->setTo([$usuario->getEmail() => $usuario->getNome()])
-                ->setBody($this->renderView('emails/usuarios/registro.html.twig', [
+            $this->get('email')->enviar(
+                $usuario->getNome() . ", ative sua conta no Microjobs",
+                [$usuario->getEmail() => $usuario->getNome()],
+                'emails/usuarios/registro.html.twig', [
                     'nome' => $usuario->getNome(),
                     'token' => $usuario->getToken()
-                ]), 'text/html');
-            $mailer->send($mensagem);
+                ]
+            );
 
             $this->addFlash("success", "Cadastrado com sucesso! Verifique seu e-mail para completar o cadastro");
             return $this->redirectToRoute('default');
