@@ -1,40 +1,5 @@
-{% extends 'base-painel.html.twig' %}
-{% block title %}Painel do usuário - {% endblock %}
-
-{% block topo_painel %}
-    <h1>Painel do usuário</h1>
-    <hr>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <h3 class="card-header text-center  text-white bg-info">Saldo Total</h3>
-                <div class="card-body">
-                    <h4 class="text-center text-danger">R$ 130,00</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <h3 class="card-header text-center  text-white bg-danger">Saldo não liberado</h3>
-                <div class="card-body">
-                    <h4 class="text-center text-danger">R$ 40,00</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <h3 class="card-header text-center text-white bg-success">Saldo disponível</h3>
-                <div class="card-body">
-                    <h4 class="text-center text-danger">R$ 90,00</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-{% endblock %}
-
-{% block body_painel %}
-    <!-- TODO: Refatorar usando includes -->
+{% extends "@Admin/base-admin.html.twig" %}
+{% block body_admin %}
     <div class="row mb-2">
         <div class="col-md-4">
             <form action="" name="form_filtro_status">
@@ -50,10 +15,6 @@
                     <option value="R" {% if status == "R" %} selected {% endif %}>Rejeitados</option>
                 </select>
             </form>
-        </div>
-        <div class="offset-4 col-md-4">
-            <a href="{{ path('cadastrar_job') }}" class="btn btn-block btn-primary float-right">Cadastrar
-                MicroJob</a>
         </div>
     </div>
     <hr>
@@ -92,7 +53,7 @@
                                class="float-right btn btn-danger btn-sm btn_excluir_servico"><i
                                         class="fa fa-trash-alt"></i></a>
                         {% endif %}
-                        {#<a href="" class="float-right btn btn-success btn-sm mr-1"><i class="fa fa-pencil-alt"></i></a>#}
+                        <a href="" class="float-right btn btn-success btn-sm mr-1"><i class="fa fa-pencil-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -104,17 +65,4 @@
             </div>
         </div>
     {% endfor %}
-{% endblock %}
-
-{% block javascripts %}
-    <script>
-        var btn = document.querySelector('.btn_excluir_servico');
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (confirm("Deseja realmente excluir este job?")) {
-                var url = this.getAttribute('href');
-                window.location = url;
-            }
-        });
-    </script>
 {% endblock %}
