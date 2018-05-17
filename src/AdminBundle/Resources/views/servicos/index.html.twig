@@ -27,7 +27,8 @@
                              class="img-responsive" alt="{{ job.titulo }}">
                     </div>
                     <div class="col-md-6">
-                        <h5>{{ job.titulo }}</h5>
+                        <h5><a href="{{ path("visualizar_job", {"slug": job.slug}) }}"
+                               target="_blank">{{ job.titulo }}</a></h5>
                     </div>
                     <div class="col-md-2">
                         <p>{{ job.dataCadastro | date('d/m/Y') }}</p>
@@ -54,6 +55,15 @@
                                         class="fa fa-trash-alt"></i></a>
                         {% endif %}
                         <a href="" class="float-right btn btn-success btn-sm mr-1"><i class="fa fa-pencil-alt"></i></a>
+
+                        {% if job.status == 'A' %}
+                            <div class="clearfix mb-2"></div>
+                            <a href="{{ path('admin_publicar_job', {id: job.id}) }}"
+                               class="js-publicar float-right btn btn-primary btn-sm"><i class="fa fa-check-circle"></i></a>
+                            <a href="{{ path('admin_rejeitar_job', {id: job.id}) }}"
+                               class="js-rejeitar float-right btn btn-warning btn-sm mr-1"><i
+                                        class="fa fa-ban text-white"></i></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -65,4 +75,30 @@
             </div>
         </div>
     {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+       $(function() {
+            $('.js-publicar').click(function(e){
+                e.preventDefault();
+                var url = $(this).prop('href');
+                axios.get(url)
+                    .then(function(response){
+                        alert("Job publicado com sucesso!");
+                        location.reload();
+                    });
+            });
+
+           $('.js-rejeitar').click(function(e){
+               e.preventDefault();
+               var url = $(this).prop('href');
+               axios.get(url)
+                   .then(function(response){
+                       alert("Job rejeitado com sucesso!");
+                       location.reload();
+                   });
+           });
+       });
+    </script>
 {% endblock %}

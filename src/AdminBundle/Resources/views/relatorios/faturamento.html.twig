@@ -1,0 +1,28 @@
+{% extends "@Admin/base-admin.html.twig" %}
+{% block body_admin %}
+    <h3>Relatorio de faturamento mensal</h3>
+    <hr>
+    <div class="text-right mb-3">
+        <a href="{{ path('admin_relatorio_faturamento', {"exportar": "pdf"}) }}" class="btn btn-dark">Exportar pdf</a>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Período</th>
+                <th>Valor</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for faturamento in faturamentos %}
+                <tr>
+                    <td>{{ faturamento.data_cadastro | date("m/Y") }}</td>
+                    <td>R$ {{ faturamento.faturamento | number_format(2, ",", ".") }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="table-info">Nenhum faturamento</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
