@@ -54,11 +54,11 @@ class ServicosController extends Controller
     }
 
     /**
-     * @Route("/rejeitar-job/{id}", name="admin_rejeitar_job")
+     * @Route("/publicar-job/{id}", name="admin_publicar_job")
      */
     public function rejeitarJob(Servico $servico)
     {
-        $servico->setStatus('R');
+        $servico->setStatus('P');
         $this->em->persist($servico);
         $this->em->flush();
 

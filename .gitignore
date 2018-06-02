@@ -5,6 +5,7 @@
 /var/
 /vendor/
 public/uploads
+public/media
 ###< symfony/framework-bundle ###
 
 ###> symfony/webpack-encore-pack ###

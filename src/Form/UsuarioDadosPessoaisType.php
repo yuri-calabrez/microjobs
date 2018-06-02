@@ -4,30 +4,18 @@ namespace App\Form;
 
 use App\Entity\Usuario;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UsuarioType extends AbstractType
+class UsuarioDadosPessoaisType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('nome')
             ->add('email')
-            ->add('senha', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => "As senhas devem ser identicas",
-                'first_options' => ['label' => 'Senha'],
-                'second_options' => ['label' => 'Repita a senha']
-            ])
-//            ->add('status')
-//            ->add('token')
-//            ->add('data_cadastro')
-//            ->add('data_alteracao')
-//            ->add('roles')
+            ->add('dados_pessoais', DadosPessoaisType::class)
             ->add('enviar', SubmitType::class, [
                 'label' => 'Enviar'
             ])
