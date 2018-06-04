@@ -3,6 +3,10 @@
 parameters:
     locale: 'pt_BR'
     caminho_img_job: '%kernel.project_dir%/public/uploads/jobs'
+    moip_access_token: '%env(MOIP_ACCESS_TOKEN)%'
+    moip_app_id: '%env(MOIP_APP_ID)%'
+    moip_secret: '%env(MOIP_SECRET)%'
+    moip_url_retorno: '%env(MOIP_URL_RETORNO)%'
 
 services:
     # default configuration for services in *this* file
@@ -35,3 +39,8 @@ services:
     redireciona.login:
         class: App\Service\RedirecionarLogin
         arguments: ['@router']
+
+    moip:
+        class: App\Service\MoipService
+        arguments: ['%moip_access_token%', 'dev']
+        public: true

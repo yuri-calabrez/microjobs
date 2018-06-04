@@ -14,8 +14,8 @@ class PagamentoController extends Controller
      */
     public function index()
     {
-        $moip = new Moip(new BasicAuth(getenv('MOIP_TOKEN'), getenv('MOIP_KEY')), MOIP::ENDPOINT_SANDBOX);
-        dump($moip);
+       $moip = $this->get('moip')->getMoip();
+       dump($moip);
         return $this->render('pagamento/index.html.twig', [
             'controller_name' => 'PagamentoController',
         ]);
