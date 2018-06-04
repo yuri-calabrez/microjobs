@@ -21,10 +21,14 @@
         </div>
 
         <div class="form-row mt-3">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 {{ form_label(form.dados_pessoais.foto_file) }}
                 {{ form_widget(form.dados_pessoais.foto_file) }}
             </div>
+            <div class="col-md-6 pt-5">
+                <h3>Conectar ao Moip</h3>
+                <a href="javascript:void();" id="js-conectar-moip" class="btn btn-block btn-lg btn-primary">Conectar sua conta Moip</a>
+            </div>           
         </div>
         <div class="form-row mt-3">
             <div class="col-md-12">
@@ -81,4 +85,16 @@
 
 {% block title %}
 
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var btnMoip = document.getElementById('js-conectar-moip');
+    btnMoip.addEventListener('click', function(){
+        axios.get('/painel/usuario/auth-moip')
+            .then(function(res){
+                window.location = res.data.url;
+        }); 
+    });
+</script>
 {% endblock %}

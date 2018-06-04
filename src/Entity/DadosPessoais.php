@@ -114,6 +114,16 @@ class DadosPessoais
      */
     private $foto_file;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $moip_access_token;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $moip_id_conta;
+
     public function getId()
     {
         return $this->id;
@@ -295,6 +305,30 @@ class DadosPessoais
     public function setFotoFile($foto_file = null)
     {
         $this->foto_file = $foto_file;
+
+        return $this;
+    }
+
+    public function getMoipAccessToken(): ?string
+    {
+        return $this->moip_access_token;
+    }
+
+    public function setMoipAccessToken(?string $moip_access_token): self
+    {
+        $this->moip_access_token = $moip_access_token;
+
+        return $this;
+    }
+
+    public function getMoipIdConta(): ?string
+    {
+        return $this->moip_id_conta;
+    }
+
+    public function setMoipIdConta(?string $moip_id_conta): self
+    {
+        $this->moip_id_conta = $moip_id_conta;
 
         return $this;
     }
