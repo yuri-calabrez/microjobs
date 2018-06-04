@@ -28,6 +28,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/usuario/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contratar-servico, roles: ROLE_FREELA }
         - { path: ^/painel, roles: ROLE_FREELA }
         - { path: ^/admin, roles: ROLE_ADMIN }
 

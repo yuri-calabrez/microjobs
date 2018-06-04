@@ -101,6 +101,9 @@
             "ref": "d2a601ea5ccad81de2a131ed68481d012ed4667c"
         }
     },
+    "moip/moip-sdk-php": {
+        "version": "v3.1.0"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },
@@ -139,6 +142,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "rmccue/requests": {
+        "version": "v1.7.0"
     },
     "sabberworm/php-css-parser": {
         "version": "8.1.0"

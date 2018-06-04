@@ -14,3 +14,8 @@ liip_imagine:
             quality: 80
             filters:
                 thumbnail: { size: [120, 90], mode: inset }
+
+        thumb_profile_job:
+            quality: 80
+            filters:
+                thumbnail: { size: [120, 90], mode: inset }

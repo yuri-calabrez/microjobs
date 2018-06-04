@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>Pagamento</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mt-5">
+                        <h4>Contrar serviço <strong>{{ job.titulo }}</strong> por <strong>{{ job.valor }}</strong>?</h4>
+                    </div>
+                </div>
+                <h3 class="display-5">Cartão de crédito</h3>
+                <hr>
+                {% form_theme form with 'bootstrap_4_layout.html.twig' %}
+                {{ form_start(form, {"attr": {"novalidate": "novalidate"}}) }}
+                <div class="form-row">
+                    <div class="col-md-6">
+                        {{ form_label(form.numero) }}
+                        {{ form_widget(form.numero) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.mes_expiracao) }}
+                        {{ form_widget(form.mes_expiracao) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.ano_expiracao) }}
+                        {{ form_widget(form.ano_expiracao) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.cod_seguranca) }}
+                        {{ form_widget(form.cod_seguranca) }}
+                    </div>
+                    <hr>
+                    <div class="mt-4">
+                        {{ form_widget(form.enviar) }}
+                    </div>
+
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 mt-5">
+                        <h3 class="display-5">Boleto / Débito Bancário</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="" class="btn btn-lg btn-block btn-info">Pagar via Boleto</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="" class="btn btn-lg btn-block btn-warning">Pagar via débito bancario (Itau)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mt-5">
+                        <a href=""
+                           class="btn-lg btn btn-block btn-outline-success mt-5">CONTRATAR {{ job.usuario.nome|upper }}</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Contratar {{ job.usuario.nome }} por {{ job.titulo }} -
+{% endblock %}

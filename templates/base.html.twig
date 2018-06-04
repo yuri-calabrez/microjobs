@@ -74,19 +74,19 @@
       <div class="container">
           {% for message in app.session.flashBag.get('success') %}
               <div class="alert alert-success">
-                {{ message }}
+                {{ message | raw }}
               </div>
           {% endfor %}
 
           {% for message in app.session.flashBag.get('warning') %}
             <div class="alert alert-warning">
-                {{ message }}
+                {{ message | raw }}
             </div>
           {% endfor %}
 
           {% for message in app.session.flashBag.get('error') %}
             <div class="alert alert-danger">
-                {{ message }}
+                {{ message | raw }}
             </div>
           {% endfor %}
       </div>
