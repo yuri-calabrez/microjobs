@@ -36,6 +36,17 @@
                     </div>
                     <hr>
                     <div class="mt-4">
+                        <input type="hidden" value="" id="hash_css">
+                        <input type="hidden" value="" id="order_id">
+                        <textarea id="form-pub-key" cols="30" rows="10" style="display: none">-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsYVwpgV7pmzuP6r/Tnl7
+g7p6gkHFyd+L1V6azON5agei8DSPekmfjLBUGToGV2ZdqwlGi+EHGduu9+tnjKBV
+kFkCw0LJsWURA7qDcTC9EvYsG+pxmO62yyQYbYMjYW9z+PGRBSN/MlfsuO+7spj6
+e/LsNAF2sA6/hiJdu1kggSihKf2ws30B7AhCqjs7O+4A+8l4hsFvJFDVwXdnjJ9K
+z7e6AffLfxK0YkAHQyzWeylMMJOw7I8hSCHwcahhqLWBNeVUmWIQbN2N1IQ57Ze2
+07DWUdTWP0Oug9x5pVS+S5FPUeB28FUR+LrwdI2AVDWjpuM5iWyEfC4kanzZTcK1
+TQIDAQAB
+-----END PUBLIC KEY-----</textarea>
                         {{ form_widget(form.enviar) }}
                     </div>
 
@@ -72,4 +83,26 @@
 
 {% block title %}
     Contratar {{ job.usuario.nome }} por {{ job.titulo }} -
+{% endblock %}
+
+{% block javascripts %}
+    <script src="//assets.moip.com.br/v2/moip.min.js" type="text/javascript"></script>
+    <script>
+        var btnForm = document.getElementById('form_enviar');
+        btnForm.addEventListener('click', function(){
+            var cc = new Moip.CreditCard({
+                number: document.getElementById('form_numero').value,
+                cvc: document.getElementById('form_cod_seguranca').value,
+                expMonth: document.getElementById('form_mes_expiracao').value,
+                expYear: document.getElementById('form_ano_expiracao').value,
+                pubKey: document.getElementById('form-pub-key').value
+            });
+
+            if (cc.isValid()) {
+                //TODO: enviar via post para pagamento
+            } else {
+                alert('Cartão inválido!');
+            }
+        });
+    </script>
 {% endblock %}

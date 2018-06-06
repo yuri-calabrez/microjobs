@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Moip\Exceptions\UnautorizedException;
+use Moip\Exceptions\ValidationException;
+use Moip\Exceptions\UnexpectedException;
 
 class ServicosController extends Controller
 {
@@ -122,7 +125,11 @@ class ServicosController extends Controller
      */
     public function contratarServico(Servico $servico, UserInterface $user)
     {
-        //TODO: VERIFICAR ACESSO SOMENTE SE LOGADO
+        if ($user->getRoles()[0] == 'ROLE_FREELA') {
+            $this->addFlash('warning', "<h3>Atenção!</h3><p>Para contratar um serviço precisa ser um ciente. 
+                                        Acesse seu painel e faça a migração gratuitamente.</p>");
+            return $this->redirectToRoute('painel');
+        }
 
         $contratacao = new Contratacoes();
         $contratacao
@@ -134,6 +141,51 @@ class ServicosController extends Controller
 
         $this->em->persist($contratacao);
         $this->em->flush();
+
+        try {
+            $moip = $this->get('moip')->getMoip();
+
+            $moipCodCliente = $contratacao->getCliente()->getDadosPessoais()->getCodMoip();
+
+            if (empty($moipCodCliente)) {
+                $cliente = $contratacao->getCliente();
+                $clienteUniqId = md5($cliente->getId()."*".$cliente->getEmail());
+
+                $customer = $moip->customers()
+                    ->setOwnId($clienteUniqId)
+                    ->setFullName($cliente->getNome())
+                    ->setEmail($cliente->getEmail())
+                    ->setBirthDate($cliente->getDadosPessoais()->getDataNascimento())
+                    ->setTaxDocument($cliente->getDadosPessoais()->getCpf())
+                    ->setPhone($cliente->getDadosPessoais()->getTelefoneDdd(), $cliente->getDadosPessoais()->getTelefoneNumero())
+                    ->addAddress('BILLING',
+                        $cliente->getDadosPessoais()->getLogradouro(),
+                        $cliente->getDadosPessoais()->getEnderecoNumero(),
+                        $cliente->getDadosPessoais()->getBairro(),
+                        $cliente->getDadosPessoais()->getCidade(),
+                        $cliente->getDadosPessoais()->getEstado(),
+                        '12345678'
+                    )
+                    ->create();
+
+                $contratacao->getCliente()->getDadosPessoais()->setCodMoip($customer->getId);
+                $this->em->persist($contratacao);
+                $this->em->flush();
+            } else {
+                $customer = $moip->customers()->get($moipCodCliente);
+            }
+        } catch (UnautorizedException $e) {
+            echo $e->getMessage();
+            exit;
+        } catch (ValidationException $e) {
+            echo $e->getMessage();
+            exit;
+        } catch (UnexpectedException $e) {
+            echo $e->getMessage();
+            exit;
+        }
+
+
         $this->get('email')->enviar(
             $user->getNome()." - Contratação de serviço",
             [$user->getEmail() => $user->getNome()],
