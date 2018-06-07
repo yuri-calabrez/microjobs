@@ -54,6 +54,16 @@ class Contratacoes
      */
     private $data_alteracao;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $moip_cod_pedido;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $moip_cod_pagamento;
+
     public function getId()
     {
         return $this->id;
@@ -139,6 +149,30 @@ class Contratacoes
     public function setDataAlteracao(?\DateTimeImmutable $data_alteracao): self
     {
         $this->data_alteracao = $data_alteracao;
+
+        return $this;
+    }
+
+    public function getMoipCodPedido(): ?string
+    {
+        return $this->moip_cod_pedido;
+    }
+
+    public function setMoipCodPedido(?string $moip_cod_pedido): self
+    {
+        $this->moip_cod_pedido = $moip_cod_pedido;
+
+        return $this;
+    }
+
+    public function getMoipCodPagamento(): ?string
+    {
+        return $this->moip_cod_pagamento;
+    }
+
+    public function setMoipCodPagamento(?string $moip_cod_pagamento): self
+    {
+        $this->moip_cod_pagamento = $moip_cod_pagamento;
 
         return $this;
     }

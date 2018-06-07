@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Moip\Exceptions\UnautorizedException;
 use Moip\Exceptions\ValidationException;
 use Moip\Exceptions\UnexpectedException;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ServicosController extends Controller
 {
@@ -84,7 +85,7 @@ class ServicosController extends Controller
      * @Route("/contratar-servico/{id}/{slug}/tela-pagamento", name="tela_pagamento")
      * @Template("servicos/tela-pagamento.html.twig")
      */
-    public function telaPagamento(Servico $servico, UserInterface $user)
+    public function telaPagamento(Request $request, Servico $servico, UserInterface $user)
     {
         if ($user->getRoles()[0] == 'ROLE_FREELA') {
             $this->addFlash('warning', "<h3>Atenção!</h3><p>Para contratar um serviço precisa ser um ciente. 
@@ -107,7 +108,7 @@ class ServicosController extends Controller
                 ->add('cod_seguranca', TextType::class, [
                     'label' => 'CVV'
                 ])
-                ->add('enviar', ButtonType::class, [
+                ->add('enviar', SubmitType::class, [
                     'label' => 'Realizar pagamento',
                     'attr' => [
                         'class' => 'btn btn-primary'
@@ -116,7 +117,8 @@ class ServicosController extends Controller
                 ->getForm();
         return [
             'job' => $servico,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'order' => $request->get('order')
         ];
     }
 
@@ -168,17 +170,47 @@ class ServicosController extends Controller
                     )
                     ->create();
 
-                $contratacao->getCliente()->getDadosPessoais()->setCodMoip($customer->getId);
+                $contratacao->getCliente()->getDadosPessoais()->setCodMoip($customer->getId());
                 $this->em->persist($contratacao);
                 $this->em->flush();
             } else {
                 $customer = $moip->customers()->get($moipCodCliente);
             }
+            
+            $pedidoUniqId = md5($contratacao->getId()."_".$contratacao->getServico()->getId()."_".$contratacao->getCliente()->getId()."_".$contratacao->getFreelancer()->getId());
+
+            $order = $moip
+                ->orders()
+                ->setOwnId($pedidoUniqId)
+                ->addItem(
+                    $contratacao->getServico()->getTitulo(),
+                    1,
+                    substr($contratacao->getServico()->getDescricao(), 0, 250),
+                    3000
+                )
+                ->setAddition(300)
+                ->setCustomerId($customer->getId())
+                //Necessitar ter duas contas de testes moip
+                //Desativado apenas para testes
+               /* ->addReceiver(
+                    $contratacao->getFreelancer()->getDadosPessoais()->getMoipIdConta(), 
+                    "SECONDARY", 
+                    3000, 
+                    null, 
+                    true
+                )*/
+                ->create();
+                
+                $contratacao->setMoipCodPedido($order->getId());
+
+                $this->em->persist($contratacao);
+                $this->em->flush();
+                
         } catch (UnautorizedException $e) {
             echo $e->getMessage();
             exit;
         } catch (ValidationException $e) {
-            echo $e->getMessage();
+            var_dump($e->__toString());
             exit;
         } catch (UnexpectedException $e) {
             echo $e->getMessage();
@@ -200,8 +232,12 @@ class ServicosController extends Controller
             ['servico' => $servico, 'cliente' => $user]
         );
 
-        $this->addFlash('success', 'Serviço foi contratado!');
-        return $this->redirectToRoute('default');
+        $this->addFlash('success', 'Seu pedido foi realizado! Faça o pagamento para completar sua contratação!');
+        return $this->redirectToRoute('tela_pagamento', [
+            'id' => $servico->getId(),
+            'slug' => $servico->getSlug(),
+            'order' => $order->getId()
+        ]);
     }
 
     /**
