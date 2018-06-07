@@ -7,12 +7,21 @@
             <div class="col-md-3">
                 <div class="list-group list-group-flush">
                     <!-- TODO: Fazer funcionar menu active -->
-                    <a href="#" class="list-group-item list-group-item-action">Meus microjobs</a>
+                    <a href="{{ path('painel') }}" 
+                        class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'painel' %} active {% endif %}">
+                        Meus microjobs
+                    </a>
                     {% if is_granted('ROLE_CLIENTE') %}
-                        <a href="{{ path('listar_compras') }}" class="list-group-item list-group-item-action">Compras</a>
+                        <a href="{{ path('listar_compras') }}" 
+                            class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'listar_compras' %} active {% endif %}">
+                            Compras
+                        </a>
                     {% endif %}
                     {% if is_granted('ROLE_FREELA') %}
-                        <a href="{{ path('listar_vendas') }}" class="list-group-item list-group-item-action">Vendas</a>
+                        <a href="{{ path('listar_vendas') }}" 
+                            class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'listar_vendas' %} active {% endif %}">
+                            Vendas
+                        </a>
                     {% endif %}
                     <a href="{{ path('dados_pessoais') }}" class="list-group-item list-group-item-action">Dados Pessoais</a>
                     {% if app.user.roles.0 == 'ROLE_FREELA' %}

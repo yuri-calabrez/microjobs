@@ -9,13 +9,23 @@
         <div class="row mt-5">
             <div class="col-md-3">
                 <div class="list-group list-group-flush">
-                    <!-- @TODO: FAZER FUNCIONAR classe active -->
-                    <a href="#" class="list-group-item list-group-item-action ">Default</a>
-                    <a href="{{ path('admin_listar_jobs') }}" class="list-group-item list-group-item-action ">Listar Jobs</a>
-                    <a href="#" class="list-group-item list-group-item-action ">Analisar Jobs</a>
-                    <a href="{{ path('admin_listar_usuarios') }}" class="list-group-item list-group-item-action ">Gerenciar Usuários</a>
-                    <a href="#" class="list-group-item list-group-item-action ">Financeiro</a>
-                    <a href="{{ path('admin_relatorio_faturamento') }}" class="list-group-item list-group-item-action ">Faturamento</a>
+                
+                    <a href="{{ path('admin_default') }}" 
+                        class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'admin_default' %} active {% endif %}">
+                        Default
+                    </a>
+                    <a href="{{ path('admin_listar_jobs') }}" 
+                        class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'admin_listar_jobs' %} active {% endif %}">
+                        Listar Jobs
+                    </a>
+                    <a href="{{ path('admin_listar_usuarios') }}" 
+                        class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'admin_listar_usuarios' %} active {% endif %}">
+                        Gerenciar Usuários
+                    </a>
+                    <a href="{{ path('admin_relatorio_faturamento') }}" 
+                        class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') == 'admin_relatorio_faturamento' %} active {% endif %}">
+                        Faturamento
+                    </a>
                 </div>
             </div>
             <div class="col-md-9">

@@ -26,8 +26,14 @@
                 {{ form_widget(form.dados_pessoais.foto_file) }}
             </div>
             <div class="col-md-6 pt-5">
-                <h3>Conectar ao Moip</h3>
-                <a href="javascript:void();" id="js-conectar-moip" class="btn btn-block btn-lg btn-primary">Conectar sua conta Moip</a>
+                {% if app.user.dadosPessoais is not defined or app.user.dadosPessoais.moipAccessToken is null %}
+                    <h3>Conectar ao Moip</h3>
+                    <a href="javascript:void();" id="js-conectar-moip" class="btn btn-block btn-lg btn-primary">Conectar sua conta Moip</a>
+                {% else %}
+                    <div class="alert alert-info">
+                        Conectado ao Moip
+                    </div>
+                {% endif %}
             </div>           
         </div>
         <div class="form-row mt-3">
