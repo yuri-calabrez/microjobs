@@ -92,4 +92,65 @@ class PagamentoController extends Controller
             exit;
         }
     }
+
+     /**
+     * @Route("/pagamento/boleto")
+     */
+    public function pagamentoBoleto(Request $request)
+    {
+        $contratacao = $this->em->getRepository(Contratacoes::class)->findOneBy(['moip_cod_pedido' => $orderId]);
+
+        $orderId = $request->get('order');
+        $moip = $this->get('moip')->getMoip();
+
+        $order = $moip->orders()->get($orderId);
+
+        $logoUri = 'https://cdn.moip.com.br/wp-content/uploads/2016/05/02.png';
+        $dataExpiracao = new \DateTime();
+        $dataExpiracao->add(new \DateInterval("P3D"));
+        $instrucoes = [
+            'Pagavel em qualquer banco',
+            'apos vencimento somente no banco Xpto',
+            'juros não devem ser cobrados'
+        ];
+
+        $pagamento = $order
+            ->payments()
+            ->setBoleto($dataExpiracao->format('Y-m-d'), $logoUri, $instrucoes)
+            ->setStatementDescriptor("Pgto Mjobs")
+            ->execute();
+
+        $contratacao->setMoipCodPagamento($pagamento->getId());
+        $this->em->persist($contratacao);
+        $this->em->flush();
+
+        return $this->json(['url_boleto' => $pagamento->getLinks()->getLink('payBoleto')]);
+    }
+
+     /**
+     * @Route("/pagamento/debito")
+     */
+    public function pagamentoDebito(Request $request)
+    {
+
+        $orderId = $request->get('order');
+        $moip = $this->get('moip')->getMoip();
+
+        $contratacao = $this->em->getRepository(Contratacoes::class)->findOneBy(['moip_cod_pedido' => $orderId]);
+
+        $order = $moip->orders()->get($orderId);
+        $dataExpiracao = new \DateTime();
+        $dataExpiracao->add(new \DateInterval("P3D"));
+
+        $pagamento = $order
+            ->payments()
+            ->setOnlineBankDebit('341', $dataExpiracao->format('Y-m-d'), "http://localhost:8000")
+            ->execute();
+
+        $contratacao->setMoipCodPagamento($pagamento->getId());
+        $this->em->persist($contratacao);
+        $this->em->flush();
+
+        return $this->json(['url_debito' => $pagamento->getLinks()->getLink('payOnlineBankDebitItau')]);
+    }
 }

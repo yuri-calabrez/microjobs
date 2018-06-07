@@ -57,10 +57,10 @@ TQIDAQAB
                         <h3 class="display-5">Boleto / Débito Bancário</h3>
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="" class="btn btn-lg btn-block btn-info">Pagar via Boleto</a>
+                                <a href="#" class="btn btn-lg btn-block btn-info" id="js-btn-pagar-boleto">Pagar via Boleto</a>
                             </div>
                             <div class="col-md-6">
-                                <a href="" class="btn btn-lg btn-block btn-warning">Pagar via débito bancario (Itau)</a>
+                                <a href="" class="btn btn-lg btn-block btn-warning" id="js-btn-pagar-debito">Pagar via débito bancario (Itau)</a>
                             </div>
                         </div>
                     </div>
@@ -89,6 +89,10 @@ TQIDAQAB
     <script src="//assets.moip.com.br/v2/moip.min.js" type="text/javascript"></script>
     <script>
         var btnForm = document.getElementById('form_enviar');
+        var btnBoleto = document.getElementById('js-btn-pagar-boleto');
+        var btnDebito = document.getElementById('js-btn-pagar-debito');
+        var order = document.getElementById('order_id').value
+        //Cartão
         btnForm.addEventListener('click', function(e){
             e.preventDefault();
             var cc = new Moip.CreditCard({
@@ -112,6 +116,26 @@ TQIDAQAB
             } else {
                 alert('Cartão inválido!');
             }
+        });
+
+        //Boleto
+        btnBoleto.addEventListener('click', function(e){
+            e.preventDefault();
+
+            axios.get("/pagamento/boleto?order=" + order)
+                .then(function(response){
+                    window.open(response.data.url_boleto, '_blank');
+                });
+        });
+
+        //Debito
+        btnDebito.addEventListener('click', function(e){
+            e.preventDefault();
+
+            axios.get("/pagamento/debito?order=" + order)
+                .then(function(response){
+                    window.location = response.data.url_debito;
+                });
         });
     </script>
 {% endblock %}
